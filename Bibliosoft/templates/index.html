@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/static/css/style.css" rel="stylesheet" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+  <div class="signin cf">
+    <div class="avatar"></div>
+
+    <form action="/login" method="POST">
+      <div class="box">
+        <h1 id="logintoregister">Login</h1>
+        <div class="group">
+          <input class="inputMaterial" type="text" required name="Username" />
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Username</label>
+        </div>
+        <div class="group">
+          <input class="inputMaterial" type="password" required name="Password" />
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Password</label>
+        </div>
+        <!-- Botón de inicio de sesión dentro del formulario -->
+        <button id="buttonlogintoregister" type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <script>
+
+    Swal.fire({
+
+        title: "{{ message }}",
+        // success , error , warning ,info
+
+
+        icon: "{{ category }}"
+        // success , error , warning ,info
+
+    })
+
+</script>
+{% endfor %}
+{% endif %}
+{% endwith %}
+</body>
+
+</html>

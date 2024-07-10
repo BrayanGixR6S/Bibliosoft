@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+    <!--*BOOTSTRAP-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Muli:wght@300;700&display=swap" rel="stylesheet">
+    <!--*DATATABLE-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
+    <!--*MyStyles-->
+    <link rel="stylesheet" href="../static/css/modal.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <title>Usuarios</title>
+  </head>
+  <body class="body">
+    <div class="d-flex">
+      <div id="sidebar-container" class="bg-primary">
+        <div class="logo">
+          <h4 class="text-light font-weight-bold">Bibliosoft</h4>
+        </div>
+        <div class="menu">
+          <a href="/inicio" class="d-block text-light p-3"><i class="icon ion-md-apps mr-2 lead"></i> Tablero</a>
+          {% for modul in moduls %}
+
+          {% if modul[0] != 'libro':%}
+
+            <a href="/{{ modul[0] }}" class="d-block text-light p-3"><i class="{{ modul[1] }}"></i> {{ modul[0] }} </a>
+          {% endif %}
+          {% if modul[0] == 'libro':%}
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Libro
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/{{ modul[0] }}">Libro</a>
+                <a class="dropdown-item" href="/{{ modul[0] }}/editorial">Editorial</a>
+                <a class="dropdown-item" href="/{{ modul[0] }}/pais">Pais</a>
+                <a class="dropdown-item" href="/{{ modul[0] }}/categoria">Categoria</a>
+                <a class="dropdown-item" href="/{{ modul[0] }}/autor">Autor</a>
+                <a class="dropdown-item" href="/{{ modul[0] }}/area">Area</a>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+          <a href="#" class="d-block text-light p-3"><i class="icon ion-md-settings mr-2 lead"></i> Configuración</a>
+          <a href="salir" class="d-block text-light p-3"><i class="icon ion-md-exit mr-2 lead"></i> Salir</a>
+        </div>
+      </div>
+
+      <div>
+
+        <div>
+          {% for rest in rests %}
+            {% if rest[1] == 'create': %}
+              <button class="create" onclick="document.getElementById('create').style.display='block'" style="width:auto;">Crear</button>
+            {% endif %}
+            {% if rest[1] == 'delete': %}
+              <button id="delete" style="width:auto;">Borrar</button>
+            {% endif %}
+            {% if rest[1] == 'update': %}
+              <button id="updateBtn" style="width:auto;">Editar</button>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% for rest in rests %}
+          {% if rest[1] == 'report': %}
+            <div>
+              <table id="dataUser" class="display responsive  table-striped" style="width:100%">
+                <thead>
+                  <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Fecha de nacimiento</th>
+                    <th scope="col">CURP</th>
+                    <!-- <th scope="col">contraseña</th> -->
+                    <th scope="col">telefono</th>
+                    <th scope="col">correo</th>
+                    <th scope="col">genero</th>
+                    <th scope="col">perfil</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          {% endif %}
+        {% endfor%}
+      </div>
+  <!-- *CREATE MODAL -->
+      <div id="create" class="modal">
+          <span onclick="document.getElementById('create').style.display='none'" class="close" title="Close Modal">×</span>
+          <form class="modal-content animate" action="/usuarios" method="post">
+              <div class="container">
+                  <label><b>Nombre Completo</b></label>
+                  <input type="text" placeholder="Nombre Completo" name="nombre" required>
+                  <label><b>Nombre Usuario</b></label>
+                  <input type="text" placeholder="Nombre Usuario" name="username" required>
+                  <label><b>Fecha de nacimiento</b></label>
+                  <input type="date" name="fechanaci" required><br>
+                  <label><b>CURP</b></label>
+                  <input type="text" placeholder="CURP" name="curp" required>
+                  <label><b>Password</b></label>
+                  <input type="password" placeholder="Enter Password" name="psw" required>
+                  <label><b>telefono</b></label>
+                  <input type="tel" placeholder="telefono" name="telefono" maxlength="9" required>
+                  <label><b>Correo</b></label>
+                  <input type="text" placeholder="Correo" name="correo" required>
+                  <label><b>Genero</b></label>
+                  <select name="genero" id="genero">
+                    <option value="1">Masculino</option>
+                    <option value="2">Femenino</option>
+                    <option value="3">Otro</option>
+                  </select>
+                  <label><b>perfil</b></label>
+                  <select name="perfil" id="perfil">
+                    <option value="1">Administrador</option>
+                    <option value="2">Afiliado</option>
+                  </select>
+  
+                  <div class="clearfix">
+                      <button type="button" onclick="document.getElementById('create').style.display='none'" class="cancelbtn">Cancelar</button>
+                      <button type="submit" class="signupbtn">Agregar</button>
+                  </div>
+              </div>
+          </form>
+      </div>
+
+      <!-- *UPDATE MODAL -->
+
+  <div id="update" class="modal">
+    <span onclick="document.getElementById('update').style.display='none'" class="close" title="Close Modal">×</span>
+    <form class="modal-content animate" action="/usuarios/update/" method="post" name="updateForm" id="updateForm">
+        <div class="container">
+            <label><b>Nombre</b></label>
+            <input type="text" placeholder="Nombre" name="Nnombre" id="nombreUp" required>
+            <label><b>Nombre de usuario</b></label>
+            <input type="text" placeholder="Nombre Usuario" name="userNameUp" id="userNameUp" required>
+            <label><b>Fecha de nacimiento</b></label>
+            <input type="date" name="fechanaci" id="fechanaciUp" required><br>
+            <label><b>CURP</b></label>
+            <input type="text" placeholder="CURP" name="curp" id="curpUp" required>
+            <label><b>telefono</b></label>
+            <input type="tel" placeholder="telefono" name="telefono" id="telefonoUp" required>
+            <label><b>Correo</b></label>
+            <input type="text" placeholder="Correo" name="correo" id="correoUp" required>
+            <label><b>Genero</b></label>
+            <select name="genero" id="generoUp">
+              <option value="1">Masculino</option>
+              <option value="2">Femenino</option>
+              <option value="3">Otro</option>
+            </select>
+            <label><b>perfil</b></label>
+            <select name="genero" id="perfilUp">
+              <option value="1">Administrador</option>
+              <option value="2">Afiliado</option>
+            </select>
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('update').style.display='none'" class="cancelbtn">Cancelar</button>
+                <button type="submit" class="signupbtn">Actualizar</button>
+            </div>
+        </div>
+    </form>
+  </div>
+  </div>
+
+
+       <!--*Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
+
+    <!--* DATATABLES-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+    <!-- Buttons -->
+    <script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+    <!-- download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <!-- <script src="../static/functions.js"></script> -->
+<!-- DATATIME -->
+    <script src="https://cdn.datatables.net/datetime/1.5.2/js/dataTables.dateTime.min.js"></script>
+    <!-- SELECT -->
+    <script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+    <script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+    <!-- EDITOR -->
+    <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.js"></script>
+    <script src="https://editor.datatables.net/extensions/Editor/js/editor.dataTables.js"></script>
+<!-- SEARCHBUILDER -->
+    <!-- <script src="https://cdn.datatables.net/searchbuilder/1.7.0/js/dataTables.searchBuilder.js"></script>
+    <script src="https://cdn.datatables.net/searchbuilder/1.7.0/js/searchBuilder.dataTables.js"></script> -->
+    <!-- RESPONSIVE -->
+    <!-- <script src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables"></script> -->
+    <!-- <script src="https://cdn.datatables.net/responsive/3.0.0/js/responsive.dataTables.js"></script> -->
+
+    <script src="../static/functionsUser.js"></script>
+
+
+  </body>
+</html>
